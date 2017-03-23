@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking drużyn w Angular</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="js/angular.min.js"></script>
+</head>
+<body data-ng-app="rankingApp" data-ng-controller="countryControl">
+    <div class="container-fluid text-center">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Ranking </h3>
+                <div class="input-group">
+                    <span class="input-group-addon">Szukaj: </span>
+                    <input type="text" class="form-control" placeholder="znajdz" data-ng-model="search">
+                </div>
+
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Sortowanie: </span>
+                    <input type="button" class="form-control" data-ng-click="orderByThis('FIELD2')" data-ng-model="Kraj" value="Kraj" >
+                    <input type="button" class="form-control" data-ng-click="orderByThis('FIELD8')" data-ng-model="Punkty" value="Punkty" >
+                </div>
+
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Dodaj nowy:</span>
+                    <input type="text" class="form-control" data-ng-model="lp" name="lp" placeholder="lp" style="width: 35%">
+                    <input type="text" class="form-control" data-ng-model="kraj" name="kraj" placeholder="kraj" style="width: 30%">
+                    <input type="text" class="form-control" data-ng-model="punkty" name="punkty" placeholder="punkty" style="width: 30%">
+                    <input type="button" class="form-control btn-primary" data-ng-click="addItem()" value="Dodaj" style="width:5%">
+                </div>
+
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th>LP</th>
+                                <th>KRAJ</th>
+                                <th>PUNKTY</th>
+                                <th>OPCJE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="element in rank | filter:search | orderBy:sortowanie">
+                                <td>{{element.FIELD1}}</td>
+                                <td>{{element.FIELD2 | uppercase}}</td>
+                                <td>{{element.FIELD8}}</td>
+                                <td class="usun" style="cursor: pointer" data-ng-click="removeItem($index)">USUN</td>
+                                <!-- zmienna $index automatycznie wpisywana przez angular -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var app = angular.module('rankingApp',[]);
+        app.controller('countryControl',['$scope','$http',function($scope, $http){
+            $http.get('json/ranking.json').success(function(data){
+                $scope.rank = data;
+            });
+            $scope.removeItem = function (idItem) {
+                $scope.rank.splice(idItem, 1);
+            };
+            $scope.addItem = function () {
+                var newItem = new Object();
+                newItem['FIELD1'] = $scope.lp;
+                newItem['FIELD2'] = $scope.kraj;
+                newItem['FIELD8'] = $scope.punkty;
+
+                $scope.rank.push(newItem);
+            };
+            $scope.orderByThis = function (parametrSortowania) {
+                $scope.sortowanie = parametrSortowania;
+            };
+            $scope.sortowanie = false;
+        }]);
+    </script>
+</body>
+</html>

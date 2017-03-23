@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista zdań</title>
+
+    <!-- bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- angular -->
+    <script src="js/angular.min.js"></script>
+    <!-- jquery -->
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="js/controller.js"></script>
+    <style>
+        li.todo-false{
+            color: royalblue;
+        }
+        li.todo-true{
+            color: forestgreen;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+
+<body data-ng-app="myApp" data-ng-controller="myCtrl">
+<h1 class="text-center">Lista zadań na dziś.</h1>
+<div style="padding: 10px 40px;">
+    <h2>Lista zadań</h2>
+    <h4>Zostało jeszcze do wykonania {{getIloscDoZrobienia()}} z {{getIloscZadan()}} zadan.</h2>
+    <ul class="list-unstyled">
+        <li data-ng-repeat="todos in todo" class="todo-{{todos.status}}"><input type="checkbox" style="margin-right: 10px;" data-ng-model="todos.status">{{todos.job}}</li>
+    </ul>
+    <label>Wpisz nowe zdanie: <input type="text" data-ng-model="zadanie" id="inputZadanie"><button class="btn btn-warning" data-ng-click="dodajZadanie()">Dodaj</button> </label>
+    <div><button class="btn btn-success btn-md" data-ng-click="skasujWykonane()">Skasuj wykonane.</button></div>
+</div>
+</body>
+</html>
